@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     volumes:
       - "grafana:/var/lib/grafana"
-
+      - "./grafana.ini:/etc/grafana/grafana.ini"
   loki:
     image: grafana/loki:latest
     ports:
@@ -45,16 +45,29 @@ services:
       # use official docker logging plugin
       # install following instructions at 
       #   https://grafana.com/docs/loki/latest/clients/docker-driver/
-      driver: loki
-      options:
+      #driver: loki
+      options: {}
         # URL must be reacheable by docker so make sure you use the host IP
-        loki-url: http://10.250.0.6:3100/loki/api/v1/push
+        #loki-url: http://10.250.5.1:3100/loki/api/v1/push
         # add job tag
         # this overrides all tags so container_name must be present as well
-        loki-external-labels: "job=docker,container_name={{.Name}}"
+        #loki-external-labels: "job=docker,container_name={{.Name}}"
     # wait for loki service before attempting to write to it
     depends_on:
       - loki
+    volumes:
+      - "./nginx-default.conf:/etc/nginx/conf.d/default.conf"
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:0.9.0
+    command: -nginx.scrape-uri=http://nginx/status
+    ports:
+      - "9113:9113"
+       
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+
 
 volumes:
   loki:
