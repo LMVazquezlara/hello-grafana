@@ -32,4 +32,5 @@ scrape_configs:
         - "10.250.5.1:9100"
         - "grafana:3000"
         - "nginx-exporter:9113"
+        - "influxdb:8086"
 
