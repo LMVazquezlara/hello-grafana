@@ -62,6 +62,12 @@ services:
     command: -nginx.scrape-uri=http://nginx/status
     ports:
       - "9113:9113"
+  2048-exporter:
+    image: nginx/nginx-prometheus-exporter:0.9.0
+    command: -nginx.scrape-uri=https://2048lm.52k3om6t330v6.eu-west-3.cs.amazonlightsail.com/status
+    
+
+
        
   mailhog:
     image: mailhog/mailhog
@@ -73,6 +79,22 @@ services:
     image: influxdb:latest
     ports: 
       - "8086:8086"
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+  hotrod:
+    image: jaegertracing/example-hotrod:latest
+    ports:
+      - "8070:8080"
+    command: ["all"]
+    environment:
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+    depends_on:
+      - jaeger
 volumes:
   loki:
   grafana:
