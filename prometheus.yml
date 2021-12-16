@@ -34,4 +34,5 @@ scrape_configs:
         - "nginx-exporter:9113"
         - "influxdb:8086"
         - "2048-exporter:9113"
+        - "2048-exporterIBM:9113"
 
